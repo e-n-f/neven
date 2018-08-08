@@ -205,101 +205,25 @@ float dist(float x1, float y1, float x2, float y2) {
 }
 
 void produce(unsigned char *image, int width, int height, int depth, char *filename,
-	     int left, int top, int right, int bottom, float x1, float y1, float x2, float y2, float x3, float y3) {
-	printf("processing %d by %d, depth %d\n", width, height, depth);
+	     int left, int top, int right, int bottom, int x1, int y1, int x2, int y2, int x3, int y3) {
+	// printf("processing %d by %d, depth %d\n", width, height, depth);
 
-	// printf("%f,%f %f,%f %f,%f\n", x1, y1, x2, y2, x3, y3);
+	// printf("%d,%d %d,%d %d,%d\n", x1, y1, x2, y2, x3, y3);
 
-	float deye = dist(x1, y1, x2, y2);
-	float dleft = dist(x1, y1, x3, y3);
-	float dright = dist(x2, y2, x3, y3);
+	int nheight = (y3 - y1) * 2;
+	int nwidth = nheight;
 
-	printf("ratio %.4f %.4f\n", dleft / deye, dright / deye);
+	int yd = y1 - (y3 - y1) / 2;
+	int xd = (x1 + x2) / 2 - nwidth / 2;
 
-	x2 = (x1 + x2) / 2;
+	// printf("%d,%d %d,%d\n", nwidth, nheight, xd, yd);
 
-	if (x3 == x2) {
-		x3 += .0001;
-	}
-	if (y3 == y2) {
-		y3 += .0001;
-	}
+	unsigned char outbuf[nwidth * nheight * depth];
 
-	float dx = (x3 - x2);
-	float dy = (y3 - y2);
-	float dist = sqrt((dx * dx) + (dy * dy));
-	//float ang = atan2(dy, dx);
-	float ang = atan2(1.7, 0);
-	printf("angle is %f for %f,%f to %f,%f\n", ang * 180 / M_PI, x2, y2, x3, y3);
-
-	float odist = 37;
-	float oang = atan2(131 - 94, 0);
-
-	int nwidth, nheight;
-
-	nwidth = 200;
-	nheight = 284;
-
-	// printf("scale to %d by %d\n", nwidth, nheight);
-	unsigned char outbuf[284 * 200 * depth];
-
-	int x, y, layer;
-	for (y = 0; y < nheight; y++) {
-		for (x = 0; x < nwidth; x++) {
-			// unit vector is 90, 94 to 90, 131
-
-			// shift
-
-			float nx = x - 94;
-			float ny = y - 90;
-
-			// normalize
-
-			nx = nx / odist;
-			ny = ny / odist;
-
-			// convert to polar
-
-			float d = sqrt((nx * nx) + (ny * ny));
-			float a = atan2(ny, nx);
-
-			// derotate
-
-			a -= oang;
-
-			// rotate
-
-			a += ang;
-
-			// convert from polar;
-
-			float origx = d * cos(a);
-			float origy = d * sin(a);
-
-			// denormalize
-
-			origx *= dist;
-			origy *= dist;
-
-			// deshift
-
-			origx += x2;
-			origy += y2;
-
-#if 0
-			float ny = (y - 94) / 37;
-			float nx = (x - 90) / 37;
-
-			float origx = dist * nx * cos(ang) + x2;
-			float origy = dist * ny * sin(ang) + y2;
-#endif
-
-			// printf("%d,%d to %f,%f\n", x, y, origx, origy);
-
-#if 0
-			int origx = x * width / nwidth;
-			int origy = y * height / nheight;
-#endif
+	for (int y = 0; y < nheight; y++) {
+		for (int x = 0; x < nwidth; x++) {
+			int origx = x + xd;
+			int origy = y + yd;
 
 			if (origx < 0 || origx >= width) {
 				origx = 0;
@@ -315,7 +239,7 @@ void produce(unsigned char *image, int width, int height, int depth, char *filen
 
 			int off = x * depth + y * nwidth * depth;
 
-			for (layer = 0; layer < depth; layer++) {
+			for (int layer = 0; layer < depth; layer++) {
 				outbuf[off + layer] = image[origoff + layer];
 			}
 		}
