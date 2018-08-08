@@ -216,6 +216,9 @@ void produce(unsigned char *image, int width, int height, int depth, char *filen
 	int yd = y1 - (y3 - y1) / 2;
 	int xd = (x1 + x2) / 2 - nwidth / 2;
 
+	printf("%dx%d+%d+%d %s\n", nwidth, nheight, xd, yd, filename);
+	return;
+
 	// printf("%d,%d %d,%d\n", nwidth, nheight, xd, yd);
 
 	unsigned char outbuf[nwidth * nheight * depth];
@@ -469,7 +472,7 @@ int main(int argc, char **argv) {
 	int i;
 
 	for (i = 1; i < argc; i++) {
-		printf("%s\n", argv[i]);
+		// printf("%s\n", argv[i]);
 		read_JPEG_file(argv[i]);
 	}
 }
