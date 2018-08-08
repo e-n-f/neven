@@ -106,3 +106,7 @@ clean:
 
 .c.o:
 	cc -Wall -O3 -g -c $(INCLUDE) $< -o $@
+
+install: pic
+	cp pic /usr/local/bin/neven-pic
+	cp RFFprec_501.bmd /usr/local/share/RFFprec_501.bmd

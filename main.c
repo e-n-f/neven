@@ -4,6 +4,8 @@
 #include <jpeglib.h>
 #include <ctype.h>
 #include <math.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 /*
  * Copyright (C) 2006 The Android Open Source Project
@@ -32,10 +34,14 @@ btk_HDCR gdcr;
 btk_HSDK gsdk;
 btk_HFaceFinder gfd;
 
+static void *amalloc(unsigned int size) {
+	return malloc(size);
+}
+
 static void
 initialize(int w, int h) {
 	// char *path = "Embedded/common/data/APIEm/Modules/RFFstd_501.bmd";
-	char *path = "./RFFprec_501.bmd";
+	char *path = "/usr/local/share/RFFprec_501.bmd";
 
 	const int MAX_FILE_SIZE = 65536;
 	void *initData = malloc(MAX_FILE_SIZE); /* enough to fit entire file */
@@ -47,7 +53,7 @@ initialize(int w, int h) {
 	// --------------------------------------------------------------------
 	btk_HSDK sdk = NULL;
 	btk_SDKCreateParam sdkParam = btk_SDK_defaultParam();
-	sdkParam.fpMalloc = malloc;
+	sdkParam.fpMalloc = amalloc;
 	sdkParam.fpFree = free;
 	sdkParam.maxImageWidth = w;
 	sdkParam.maxImageHeight = h;
@@ -200,7 +206,7 @@ float dist(float x1, float y1, float x2, float y2) {
 
 void produce(unsigned char *image, int width, int height, int depth, char *filename,
 	     int left, int top, int right, int bottom, float x1, float y1, float x2, float y2, float x3, float y3) {
-	// printf("processing %d by %d, depth %d\n", width, height, depth);
+	printf("processing %d by %d, depth %d\n", width, height, depth);
 
 	// printf("%f,%f %f,%f %f,%f\n", x1, y1, x2, y2, x3, y3);
 
@@ -325,7 +331,6 @@ detect(unsigned char *bitmap, int width, int height) {
 	// get the fields we need
 	btk_HDCR hdcr = gdcr;
 	btk_HFaceFinder hfd = gfd;
-	u32 maxFaces = 64;
 
 	// get to our BW temporary buffer
 	unsigned char *bwbuffer = malloc(width * height);
