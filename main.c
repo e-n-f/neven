@@ -377,6 +377,11 @@ void process(unsigned char *image, int width, int height, int depth, char *filen
 	for (i = 0; i < count; i++) {
 		report(filename, i, image, width, height, depth, filename);
 	}
+
+	if (i == 0) {
+		printf("# %s\n", filename);
+	}
+
 	destroy();
 }
 

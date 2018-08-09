@@ -96,17 +96,17 @@ OBJS = \
 	FaceRecEm/common/src/b_FDSDK/SDK.o \
 	main.o
 
-all: pic
+all: neven-face-detect
 
-pic: $(OBJS)
-	cc -o pic $(OBJS) -ljpeg -lm
+neven-face-detect: $(OBJS)
+	cc -std=c99 -o neven-face-detect $(OBJS) -ljpeg -lm
 
 clean:
 	rm -f $(OBJS)
 
 .c.o:
-	cc -Wall -O3 -g -c $(INCLUDE) $< -o $@
+	cc -std=c99 -Wall -O3 -g -c $(INCLUDE) $< -o $@
 
-install: pic
-	cp pic /usr/local/bin/neven-pic
+install: neven-face-detect
+	cp neven-face-detect /usr/local/bin/neven-face-detect
 	cp RFFprec_501.bmd /usr/local/share/RFFprec_501.bmd
