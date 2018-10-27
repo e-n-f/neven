@@ -382,6 +382,7 @@ void process(unsigned char *image, int width, int height, int depth, char *filen
 		printf("# %s\n", filename);
 	}
 
+	fflush(stdout);
 	destroy();
 }
 
