@@ -216,10 +216,14 @@ void produce(unsigned char *image, int width, int height, int depth, char *filen
 	int yd = y1 - (y3 - y1) / 2;
 	int xd = (x1 + x2) / 2 - nwidth / 2;
 
-	printf("0 %dx%d+%d+%d -- ", nwidth, nheight, xd, yd);
+	printf("0 ");
+	printf("%dx%d+%d+%d ", nwidth, nheight, xd, yd);
+	printf("%d,%d %d,%d %d,%d %d,%d %d,%d -- ", x2, y2, x2, y2, x1, y1, x1, y1, x3, y3);
+
 	for (size_t i = 0; i < 128; i++) {
 		printf("0 ");
 	}
+
 	printf("%s\n", filename);
 	return;
 
